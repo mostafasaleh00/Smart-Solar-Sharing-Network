@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}Solar Energy Predictions{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Solar Energy Predictions</h1>
+        <div class="btn-group">
+            <button class="btn btn-outline-primary" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Refresh Predictions
+            </button>
+            <button class="btn btn-outline-success" id="exportBtn">
+                <i class="fas fa-download"></i> Export Data
+            </button>
+        </div>
+    </div>
+    
+    <!-- Time Range Selection -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Select Time Range</h5>
+                <div class="btn-group">
+                    <button class="btn btn-outline-primary active" data-range="daily">Daily</button>
+                    <button class="btn btn-outline-primary" data-range="weekly">Weekly</button>
+                    <button class="btn btn-outline-primary" data-range="monthly">Monthly</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-temperature-high"></i> Average Temperature</h5>
+                    <p class="card-text display-6" id="avg-temp">Loading...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-sun"></i> Average Irradiance</h5>
+                    <p class="card-text display-6" id="avg-irrad">Loading...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-bolt"></i> Total Predicted Output</h5>
+                    <p class="card-text display-6" id="total-output">Loading...</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-chart-line"></i> Peak Output</h5>
+                    <p class="card-text display-6" id="peak-output">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Prediction Chart</h5>
+                    <canvas id="predictionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Prediction Insights</h5>
+                    <div id="insights">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle"></i> Best Time to Sell</h6>
+                            <p id="best-time">Calculating...</p>
+                        </div>
+                        <div class="alert alert-warning">
+                            <h6><i class="fas fa-exclamation-triangle"></i> Weather Impact</h6>
+                            <p id="weather-impact">Calculating...</p>
+                        </div>
+                        <div class="alert alert-success">
+                            <h6><i class="fas fa-lightbulb"></i> Efficiency Tips</h6>
+                            <p id="efficiency-tips">Calculating...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="card-title">Detailed Predictions</h5>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-secondary" id="filterBtn">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" id="sortBtn">
+                        <i class="fas fa-sort"></i> Sort
+                    </button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Time</th>
+                            <th>Temperature (°C)</th>
+                            <th>Irradiance (W/m²)</th>
+                            <th>Predicted Output (kWh)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="predictions-table">
+                        {% for pred in predictions %}
+                        <tr>
+                            <td>{{ pred.timestamp }}</td>
+                            <td>{{ pred.temperature }}</td>
+                            <td>{{ pred.irradiance }}</td>
+                            <td>{{ pred.predicted_output }}</td>
+                            <td>
+                                {% if pred.predicted_output > 0.5 %}
+                                <span class="badge bg-success">Optimal</span>
+                                {% elif pred.predicted_output > 0.2 %}
+                                <span class="badge bg-warning">Moderate</span>
+                                {% else %}
+                                <span class="badge bg-danger">Low</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentRange = 'daily';
+    let predictionChart = null;
+    
+    // Function to format date based on range
+    function formatDate(date, range) {
+        const d = new Date(date);
+        switch(range) {
+            case 'daily':
+                return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            case 'weekly':
+                return d.toLocaleDateString([], { weekday: 'short' });
+            case 'monthly':
+                return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+            default:
+                return d.toLocaleString();
+        }
+    }
+    
+    // Function to aggregate data based on range
+    function aggregateData(predictions, range) {
+        const aggregated = {};
+        
+        predictions.forEach(p => {
+            const date = new Date(p.timestamp);
+            let key;
+            
+            switch(range) {
+                case 'daily':
+                    key = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    break;
+                case 'weekly':
+                    key = date.toLocaleDateString([], { weekday: 'short' });
+                    break;
+                case 'monthly':
+                    key = date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                    break;
+            }
+            
+            if (!aggregated[key]) {
+                aggregated[key] = {
+                    temperature: [],
+                    irradiance: [],
+                    predicted_output: []
+                };
+            }
+            
+            aggregated[key].temperature.push(p.temperature);
+            aggregated[key].irradiance.push(p.irradiance);
+            aggregated[key].predicted_output.push(p.predicted_output);
+        });
+        
+        // Calculate averages for each time period
+        return Object.entries(aggregated).map(([key, values]) => ({
+            timestamp: key,
+            temperature: values.temperature.reduce((a, b) => a + b, 0) / values.temperature.length,
+            irradiance: values.irradiance.reduce((a, b) => a + b, 0) / values.irradiance.length,
+            predicted_output: values.predicted_output.reduce((a, b) => a + b, 0) / values.predicted_output.length
+        }));
+    }
+    
+    // Function to update chart
+    function updateChart(predictions, range) {
+        const aggregatedData = aggregateData(predictions, range);
+        
+        if (predictionChart) {
+            predictionChart.destroy();
+        }
+        
+        const ctx = document.getElementById('predictionChart').getContext('2d');
+        predictionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: aggregatedData.map(p => p.timestamp),
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: aggregatedData.map(p => p.temperature),
+                    borderColor: 'rgb(255, 99, 132)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    yAxisID: 'y',
+                    fill: true
+                }, {
+                    label: 'Irradiance (W/m²)',
+                    data: aggregatedData.map(p => p.irradiance),
+                    borderColor: 'rgb(255, 159, 64)',
+                    backgroundColor: 'rgba(255, 159, 64, 0.1)',
+                    yAxisID: 'y1',
+                    fill: true
+                }, {
+                    label: 'Predicted Output (kWh)',
+                    data: aggregatedData.map(p => p.predicted_output),
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    yAxisID: 'y2',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Irradiance (W/m²)'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    },
+                    y2: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Output (kWh)'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    // Function to update table
+    function updateTable(predictions, range) {
+        const aggregatedData = aggregateData(predictions, range);
+        const tbody = document.getElementById('predictions-table');
+        tbody.innerHTML = '';
+        
+        aggregatedData.forEach(pred => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${pred.timestamp}</td>
+                <td>${pred.temperature.toFixed(1)}</td>
+                <td>${pred.irradiance.toFixed(1)}</td>
+                <td>${pred.predicted_output.toFixed(2)}</td>
+                <td>
+                    ${pred.predicted_output > 0.5 ? 
+                        '<span class="badge bg-success">Optimal</span>' : 
+                        pred.predicted_output > 0.2 ? 
+                        '<span class="badge bg-warning">Moderate</span>' : 
+                        '<span class="badge bg-danger">Low</span>'}
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    
+    // Function to update summary statistics
+    function updateSummaryStats(predictions) {
+        const avgTemp = predictions.reduce((sum, p) => sum + p.temperature, 0) / predictions.length;
+        const avgIrrad = predictions.reduce((sum, p) => sum + p.irradiance, 0) / predictions.length;
+        const totalOutput = predictions.reduce((sum, p) => sum + p.predicted_output, 0);
+        const peakOutput = Math.max(...predictions.map(p => p.predicted_output));
+        
+        document.getElementById('avg-temp').textContent = `${avgTemp.toFixed(1)}°C`;
+        document.getElementById('avg-irrad').textContent = `${avgIrrad.toFixed(1)} W/m²`;
+        document.getElementById('total-output').textContent = `${totalOutput.toFixed(2)} kWh`;
+        document.getElementById('peak-output').textContent = `${peakOutput.toFixed(2)} kWh`;
+        
+        const bestTimePred = predictions.reduce((max, p) => 
+            p.predicted_output > max.predicted_output ? p : max, predictions[0]);
+        
+        document.getElementById('best-time').textContent = 
+            `Best time to sell: ${formatDate(bestTimePred.timestamp, currentRange)} (${bestTimePred.predicted_output.toFixed(2)} kWh)`;
+        
+        document.getElementById('weather-impact').textContent = 
+            `Current conditions are ${avgIrrad > 600 ? 'optimal' : 'suboptimal'} for solar production.`;
+        
+        document.getElementById('efficiency-tips').textContent = 
+            `Consider ${avgTemp > 30 ? 'cooling measures' : 'standard operation'} for optimal panel efficiency.`;
+    }
+    
+    // Initialize with daily view
+    const predictions = {{ predictions|tojson }};
+    updateChart(predictions, 'daily');
+    updateTable(predictions, 'daily');
+    updateSummaryStats(predictions);
+    
+    // Add event listeners for time range buttons
+    document.querySelectorAll('[data-range]').forEach(button => {
+        button.addEventListener('click', function() {
+            document.querySelectorAll('[data-range]').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            currentRange = this.dataset.range;
+            updateChart(predictions, currentRange);
+            updateTable(predictions, currentRange);
+        });
+    });
+    
+    // Add event listeners for refresh and export buttons
+    document.getElementById('refreshBtn').addEventListener('click', function() {
+        window.location.reload();
+    });
+    
+    document.getElementById('exportBtn').addEventListener('click', function() {
+        const aggregatedData = aggregateData(predictions, currentRange);
+        const csv = aggregatedData.map(p => 
+            `${p.timestamp},${p.temperature.toFixed(1)},${p.irradiance.toFixed(1)},${p.predicted_output.toFixed(2)}`
+        ).join('\n');
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', `solar_predictions_${currentRange}.csv`);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    });
+});
+</script>
+{% endblock %} 

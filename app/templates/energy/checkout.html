@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Energy Purchase{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Checkout</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Energy Details</h5>
+                        <p><strong>Amount:</strong> {{ listing.amount }} kWh</p>
+                        <p><strong>Price per kWh:</strong> ${{ listing.price }}</p>
+                        <p><strong>Total Price:</strong> ${{ "%.2f"|format(listing.amount * listing.price) }}</p>
+                        <p><strong>Location:</strong> {{ listing.producer.location }}</p>
+                        <p><strong>Producer:</strong> {{ listing.producer.name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Your Details</h5>
+                        <p><strong>Name:</strong> {{ current_user.name }}</p>
+                        <p><strong>Email:</strong> {{ current_user.email }}</p>
+                        <p><strong>Location:</strong> {{ current_user.location }}</p>
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ url_for('energy.purchase', listing_id=listing.id) }}">
+                    <div class="alert alert-info">
+                        <h6>Important Notes:</h6>
+                        <ul class="mb-0">
+                            <li>Please review the energy details before confirming your purchase.</li>
+                            <li>The transaction will be processed immediately upon confirmation.</li>
+                            <li>You will receive a confirmation email with the transaction details.</li>
+                        </ul>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{{ url_for('energy.marketplace') }}" class="btn btn-secondary">Back to Marketplace</a>
+                        <button type="submit" class="btn btn-primary">Confirm Purchase</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
