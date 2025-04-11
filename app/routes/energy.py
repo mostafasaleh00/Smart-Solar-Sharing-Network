@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app.models import EnergyListing, Transaction, energy_listings, transactions, users
 import uuid
+from datetime import datetime
+from app.services import feature_extractor, predictor
 
 bp = Blueprint('energy', __name__, url_prefix='/energy')
 
@@ -11,7 +13,24 @@ def list_energy():
     if current_user.role != 'producer':
         flash('Only producers can list energy')
         return redirect(url_for('dashboard.index'))
+    
+    if request.method == 'GET':
+        # Get predicted price
+        current_time = datetime.utcnow()
+        weather_data = feature_extractor.get_weather_data(current_user.location)
+        demand_level = feature_extractor.get_demand_level(current_user.location, current_time)
         
+        features = predictor.prepare_features(
+            time=current_time,
+            location=current_user.location,
+            demand_level=demand_level,
+            weather_data=weather_data
+        )
+        
+        predicted_price = predictor.predict_price(features)
+        
+        return render_template('energy/list.html', predicted_price=predicted_price)
+    
     if request.method == 'POST':
         amount = float(request.form.get('amount'))
         price = float(request.form.get('price'))
