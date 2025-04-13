@@ -69,10 +69,10 @@ def solar_predictions():
             
             # Make prediction
             scaled_output = model.predict(scaled_input, verbose=0)
-            
+        
             # Inverse transform the prediction
             predicted_output = scaler_y.inverse_transform(scaled_output)[0][0]
-            
+        
             predictions.append({
                 'timestamp': timestamp,
                 'temperature': round(temp, 1),

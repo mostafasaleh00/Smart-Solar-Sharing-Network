@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Solar Sharing Network - Presentation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+        }
+        
+        .slide {
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .slide-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .diagram {
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--secondary-color);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-content {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stats-number {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .tech-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 120px;
+        }
+        
+        .tech-icon {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .problem-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .solution-card {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .ml-feature {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .security-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .icon-circle .feature-icon {
+            color: white;
+            font-size: 2rem;
+        }
+
+        .challenge-card {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .challenge-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .solution-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-badge {
+            position: absolute;
+            left: -1rem;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .impact-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            height: 100%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .impact-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .impact-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Smart Solar Sharing Network</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#overview">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#problem">Problem</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#architecture">Architecture</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ml">ML Components</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#dataflow">Data Flow</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#impact">Impact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Introduction Slide -->
+    <section id="intro" class="slide">
+        <div class="container text-center">
+            <h1 class="display-4 mb-4">Smart Solar Sharing Network</h1>
+            <p class="lead">Revolutionizing Energy Distribution Through AI-Powered Peer-to-Peer Trading</p>
+            <div class="mt-4">
+                <a href="#overview" class="btn btn-primary btn-lg">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Slide -->
+    <section id="overview" class="slide">
+        <div class="container">
+            <h2 class="slide-title text-center">Project Overview</h2>
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="icon-circle mb-4">
+                                <i class="fas fa-solar-panel feature-icon"></i>
+                            </div>
+                            <h5 class="card-title">Solar Energy Producers</h5>
+                            <p class="card-text">Sell excess energy directly to consumers</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="icon-circle mb-4">
+                                <i class="fas fa-bolt feature-icon"></i>
+                            </div>
+                            <h5 class="card-title">Energy Consumers</h5>
+                            <p class="card-text">Purchase clean energy at competitive prices</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="icon-circle mb-4">
+                                <i class="fas fa-brain feature-icon"></i>
+                            </div>
+                            <h5 class="card-title">AI-Powered Predictions</h5>
+                            <p class="card-text">Optimize pricing and production</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Statement Slide -->
+    <section id="problem" class="slide">
+        <div class="container">
+            <h2 class="slide-title text-center">Problem Statement</h2>
+            <div class="row">
+                <div class="col-md-6" data-aos="fade-right">
+                    <div class="problem-container">
+                        <h4 class="mb-4">Current Energy Market Challenges</h4>
+                        <div class="challenge-card">
+                            <div class="challenge-icon">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="challenge-content">
+                                <h5>Limited Access</h5>
+                                <p>Limited access to clean energy sources</p>
+                            </div>
+                        </div>
+                        <div class="challenge-card">
+                            <div class="challenge-icon">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="challenge-content">
+                                <h5>Inefficient Distribution</h5>
+                                <p>Energy distribution inefficiencies</p>
+                            </div>
+                        </div>
+                        <div class="challenge-card">
+                            <div class="challenge-icon">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="challenge-content">
+                                <h5>Pricing Transparency</h5>
+                                <p>Lack of transparent pricing mechanisms</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-left">
+                    <div class="solution-container">
+                        <h4 class="mb-4">Our Solution</h4>
+                        <div class="solution-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-badge">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h5>Direct Trading</h5>
+                                    <p>Peer-to-peer energy trading platform</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-badge">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h5>AI Optimization</h5>
+                                    <p>Smart price and production optimization</p>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-badge">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h5>Transparent Market</h5>
+                                    <p>Open and fair marketplace</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Slide -->
+    <section id="architecture" class="slide">
+        <div class="container">
+            <h2 class="slide-title text-center">System Architecture</h2>
+            <div class="row">
+                <div class="col-md-6" data-aos="fade-right">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Backend Architecture</h5>
+                            <div class="tech-stack">
+                                <div class="tech-item">
+                                    <i class="fab fa-python tech-icon"></i>
+                                    <p>Flask</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-database tech-icon"></i>
+                                    <p>SQLAlchemy</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-robot tech-icon"></i>
+                                    <p>TensorFlow</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-brain tech-icon"></i>
+                                    <p>Scikit-learn</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-chart-line tech-icon"></i>
+                                    <p>Pandas</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-calculator tech-icon"></i>
+                                    <p>NumPy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-left">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Frontend Architecture</h5>
+                            <div class="tech-stack">
+                                <div class="tech-item">
+                                    <i class="fab fa-bootstrap tech-icon"></i>
+                                    <p>Bootstrap 5</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fab fa-js tech-icon"></i>
+                                    <p>Chart.js</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-mobile-alt tech-icon"></i>
+                                    <p>Responsive</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fab fa-html5 tech-icon"></i>
+                                    <p>HTML5</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fab fa-css3-alt tech-icon"></i>
+                                    <p>CSS3</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fab fa-js-square tech-icon"></i>
+                                    <p>JavaScript</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Machine Learning Components -->
+    <section id="ml" class="slide">
+        <div class="container">
+            <h2 class="slide-title text-center">Machine Learning Components</h2>
+            <div class="row">
+                <div class="col-md-6" data-aos="fade-right">
+                    <div class="ml-feature">
+                        <h5>Price Prediction Model</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Random Forest Regressor</li>
+                            <li><i class="fas fa-check text-success me-2"></i>90% Accuracy</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Time-based Analysis</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Weather Integration</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-left">
+                    <div class="ml-feature">
+                        <h5>Production Prediction Models</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Sequential Neural Network</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Informer Model</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Meta Model (Sequential)</li>
+                            <li><i class="fas fa-check text-success me-2"></i>97% Accuracy</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Weather Pattern Analysis</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Time-series Forecasting</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Flow -->
+    <section id="dataflow" class="slide">
+        <div class="container">
+            <h2 class="slide-title text-center">Data Flow</h2>
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-user-plus feature-icon"></i>
+                            <h5 class="card-title">User Registration Flow</h5>
+                            <div class="timeline-content mt-3">
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>User signup</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Role selection</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Profile completion</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Account activation</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-exchange-alt feature-icon"></i>
+                            <h5 class="card-title">Energy Trading Flow</h5>
+                            <div class="timeline-content mt-3">
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Producer creates listing</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>System suggests price</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Consumer views listing</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Transaction processing</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Status updates</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-line feature-icon"></i>
+                            <h5 class="card-title">Prediction Flow</h5>
+                            <div class="timeline-content mt-3">
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Weather data collection</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Feature extraction</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Model prediction</p>
+                                <p class="mb-2"><i class="fas fa-arrow-right text-primary me-2"></i>Result presentation</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Slide -->
+    <section id="impact" class="slide">
+        <div class="container">
+            <h2 class="slide-title text-center">Business Impact</h2>
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-leaf feature-icon mb-4" style="color: #2ecc71;"></i>
+                            <h4 class="card-title mb-4">Environmental Benefits</h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Increased renewable energy usage</li>
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Reduced carbon footprint</li>
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Sustainable energy practices</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-line feature-icon mb-4" style="color: #f1c40f;"></i>
+                            <h4 class="card-title mb-4">Economic Benefits</h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Cost savings for consumers</li>
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Additional revenue for producers</li>
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Market efficiency</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users feature-icon mb-4" style="color: #3498db;"></i>
+                            <h4 class="card-title mb-4">Social Impact</h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Energy democratization</li>
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Community engagement</li>
+                                <li class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Education opportunities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Enhancements -->
+    <section id="future" class="slide">
+        <div class="container">
+            <h2 class="slide-title text-center">Future Enhancements</h2>
+            <div class="row">
+                <div class="col-md-6" data-aos="fade-right">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-center mb-4">Short-term Goals</h5>
+                            <div class="timeline-content">
+                                <p class="mb-3"><i class="fas fa-solar-panel text-primary me-2"></i>Support for different solar farm capacities</p>
+                                <p class="mb-3"><i class="fas fa-cloud-sun text-primary me-2"></i>Enhanced weather integration</p>
+                                <p class="mb-3"><i class="fas fa-chart-line text-primary me-2"></i>Improved prediction accuracy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-left">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-center mb-4">Long-term Vision</h5>
+                            <div class="timeline-content">
+                                <p class="mb-3"><i class="fas fa-robot text-primary me-2"></i>Automated trading</p>
+                                <p class="mb-3"><i class="fas fa-file-contract text-primary me-2"></i>Smart contracts</p>
+                                <p class="mb-3"><i class="fas fa-link text-primary me-2"></i>Blockchain integration</p>
+                                <p class="mb-3"><i class="fas fa-chart-bar text-primary me-2"></i>Advanced analytics</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Thank You Slide -->
+    <section id="thankyou" class="slide">
+        <div class="container text-center">
+            <div class="card mx-auto" style="max-width: 600px;">
+                <div class="card-body py-5">
+                    <i class="fas fa-handshake feature-icon mb-4" style="color: var(--secondary-color);"></i>
+                    <h2 class="card-title mb-4">Thank You!</h2>
+                    <p class="lead mb-4">We appreciate your time and interest in our Smart Solar Sharing Network project.</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#intro" class="btn btn-primary">
+                            <i class="fas fa-home me-2"></i>Back to Start
+                        </a>
+                        <a href="#contact" class="btn btn-outline-primary">
+                            <i class="fas fa-envelope me-2"></i>Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Slide -->
+    <section id="contact" class="slide">
+        <div class="container text-center">
+            <h2 class="slide-title">Get in Touch</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Contact Information</h5>
+                            <p class="card-text">
+                                <i class="fas fa-envelope me-2"></i> support@solarsharing.net<br>
+                                <i class="fab fa-github me-2"></i> github.com/solarsharing<br>
+                                <i class="fas fa-globe me-2"></i> solarsharing.net
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+</body>
+</html> 
